@@ -573,9 +573,8 @@ class BackBroker(bt.BrokerBase):
             # pseudo-execute the order to get the remaining cash after exec
             cash = self._execute(order, cash=cash, position=position)
 
-            if cash >= 0.0:
-                self.submit_accept(order)
-                continue
+            self.submit_accept(order)
+            continue
 
             order.margin()
             self.notify(order)
@@ -782,12 +781,7 @@ class BackBroker(bt.BrokerBase):
             openedcomm = cinfocomp.getcommission(opened, price)
             cash -= openedcomm
 
-            if cash < 0.0:
-                # execution is not possible - nullify
-                opened = 0
-                openedvalue = openedcomm = 0.0
-
-            elif ago is not None:  # real execution
+            if ago is not None:  # real execution
                 if abs(psize) > abs(opened):
                     # some futures were opened - adjust the cash of the
                     # previously existing futures to the operation price and
