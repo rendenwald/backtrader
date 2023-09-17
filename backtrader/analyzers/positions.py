@@ -75,7 +75,7 @@ class PositionsValue(bt.Analyzer):
         self._usedate = tf >= bt.TimeFrame.Days
 
     def next(self):
-        pvals = [self.strategy.broker.get_value([d]) for d in self.datas]
+        pvals = [self.strategy.broker.get_value([d]) for d in self.datas if all(period not in d._name for period in ["_monthly", "_weekly"])]
         if self.p.cash:
             pvals.append(self.strategy.broker.get_cash())
 
